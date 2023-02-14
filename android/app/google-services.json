@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1096698039231",
+    "project_id": "ingoralajagani-70f57",
+    "storage_bucket": "ingoralajagani-70f57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096698039231:android:dbfc3510d1274445f62f0a",
+        "android_client_info": {
+          "package_name": "com.ingorala.jagani"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096698039231-kmqtg0ffnf691dsig09tddvgjnq6bgd9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ingorala.jagani",
+            "certificate_hash": "27f373101c95e8e99eef7a88faeb830db629465d"
+          }
+        },
+        {
+          "client_id": "1096698039231-rf6qehc09figrejaaqrtgcc9i7jfgolt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbGLepbXQZd-IuPzoxqYlMkbbfguKNzRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096698039231-rf6qehc09figrejaaqrtgcc9i7jfgolt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
