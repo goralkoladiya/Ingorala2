@@ -17,7 +17,7 @@ import '../../config/ui_icons.dart';
 import '../../main.dart';
 
 import '../MyProvider.dart';
-import '../models/user.dart';
+
 import '../widgets/ProfileSettingsDialog.dart';
 import '../widgets/SearchBarWidget.dart';
 import 'package:flutter/material.dart';
@@ -136,7 +136,7 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   ),
                   Column(
                     children: [
-                      m.offimage.value .startsWith("http")
+                      m.offimage.value!=""
                           ? InkWell(
                               onTap: () {
                                 showDialog(

@@ -6,11 +6,10 @@ import 'package:ingorala/src/screens/profilepage.dart';
 import '../../config/ui_icons.dart';
 import '../screens/account.dart';
 import '../screens/favorites.dart';
-import '../screens/home.dart';
+
 import '../screens/messages.dart';
 import '../screens/notifications.dart';
 import '../widgets/DrawerWidget.dart';
-import '../widgets/FilterWidget.dart';
 import 'package:flutter/material.dart';
 
 import 'alphabet.dart';
@@ -54,7 +53,6 @@ class TabsWidget extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       drawer: DrawerWidget(),
-      endDrawer: FilterWidget(),
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: new IconButton(

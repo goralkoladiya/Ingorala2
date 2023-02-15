@@ -51,12 +51,12 @@ class _SplashState extends State<Splash> {
         print("splash=$value");
         if(value.length>0)
         {
-          Navigator.of(context).pushNamed('/Tabs', arguments: 2);
+          Navigator.of(context).pushReplacementNamed('/Tabs', arguments: 2);
         }
       });
     }
     else{
-      Navigator.of(context).pushNamed('/SignIn');
+      Navigator.of(context).pushReplacementNamed('/SignIn');
     }
   }
   @override

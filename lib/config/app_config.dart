@@ -8,6 +8,7 @@ class App {
   double? _widthPadding;
 
   App(_context) {
+
     this._context = _context;
     MediaQueryData _queryData = MediaQuery.of(this._context!);
     _height = _queryData.size.height / 100.0;

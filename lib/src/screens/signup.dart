@@ -1,5 +1,4 @@
 import '../../config/ui_icons.dart';
-import '../widgets/SocialMediaWidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -133,7 +132,7 @@ class _SignUpWidgetState extends State<SignUpWidget> {
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       SizedBox(height: 20),
-                      new SocialMediaWidget()
+
                     ],
                   ),
                 ),

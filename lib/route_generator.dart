@@ -7,10 +7,8 @@ import 'src/screens/signin.dart';
 import 'src/screens/signup.dart';
 import 'src/screens/splashScreen.dart';
 import 'src/screens/tabs.dart';
-import 'src/screens/utilitie.dart';
-import 'src/screens/unit.dart';
-import 'src/screens/mapnit.dart';
-import 'src/screens/maps.dart';
+
+
 
 class RouteGenerator {
 
@@ -29,16 +27,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SignUpWidget());  
       case '/Tabs':
         return MaterialPageRoute(builder: (_) => TabsWidget());
-      case '/Utilities':
-        return MaterialPageRoute(builder: (_) => UtilitieWidget(routeArgument: args as RouteArgument,));
+      // case '/Utilities':
+      //   return MaterialPageRoute(builder: (_) => UtilitieWidget(routeArgument: args as RouteArgument,));
       // case '/Languages':
       //   return MaterialPageRoute(builder: (_) => LanguagesWidget());
-      case '/Unit':
-        return MaterialPageRoute(builder: (_) => Unit());
-      case '/Maps':
-        return MaterialPageRoute(builder: (_) => DaftarUnit());
-       case '/Map':
-        return MaterialPageRoute(builder: (_) => Location());
       // case '/Legend':
       //   return MaterialPageRoute(builder: (_) => Home());
       case '/Profile':

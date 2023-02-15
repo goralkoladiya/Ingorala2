@@ -9,7 +9,6 @@ import 'package:ingorala/config/ui_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:ingorala/src/MyProvider.dart';
 import 'package:ingorala/src/models/conversation.dart';
-import 'package:ingorala/src/widgets/ProfileSettingsDialog.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/conversation.dart' as model;
 import '../widgets/EmptyMessagesWidget.dart';
@@ -27,6 +26,14 @@ class _SingleListState extends State<SingleList> {
   MyProvider m=Get.put(MyProvider());
   TextEditingController t1=TextEditingController();
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // executes after build
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,10 +68,10 @@ class _SingleListState extends State<SingleList> {
                       hintStyle: TextStyle(color: Theme.of(context).focusColor.withOpacity(0.8)),
                       suffixIcon: IconButton(onPressed: () {
                         print("hh");
-                        if(t1.text.length>0)
+                        // if(t1.text.length>0)
                         {
                           m.searchcontactList.value=m.searchtempcontactList.where((element) =>
-                              element.eName.toString().toLowerCase().contains(t1.text.toLowerCase())).toList();
+                              element.e_name.toString().toLowerCase().contains(t1.text.toLowerCase())).toList();
                         }
                         setState(() {});
                       },icon: Icon(UiIcons.loupe, size: 20), color: Theme.of(context).hintColor),

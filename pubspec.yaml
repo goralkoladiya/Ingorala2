@@ -64,8 +64,6 @@ dependencies:
   firebase_core:
   firebase_auth:
   flutter_otp_text_field:
-  objectbox:
-  objectbox_sync_flutter_libs:
 
 dependecy_override:
 

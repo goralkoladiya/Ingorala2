@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../config/ui_icons.dart';
 import '../MyProvider.dart';
-import '../models/user.dart';
+
 import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class DrawerWidget extends StatelessWidget {
@@ -29,7 +29,7 @@ class DrawerWidget extends StatelessWidget {
               m.contact.value,
               style: Theme.of(context).textTheme.caption,
             )),
-            currentAccountPicture: Obx(() =>  m.offimage.value .startsWith("http")
+            currentAccountPicture: Obx(() =>  m.offimage.value!=""
                 ? Obx(() => SizedBox(
               width: 90,
               height: 90,

@@ -70,10 +70,12 @@ class _alphabetState extends State<alphabet> {
                   openBuilder: (context, action) {
                     print(alpha[index]);
                     m.searchcontactList.value=m.tempcontactList.where((element) =>
-                        element.eName.toString().toLowerCase().startsWith(alpha[index].toLowerCase())).toList();
+                        element.e_name.toString().toLowerCase().startsWith(alpha[index].toLowerCase())).toList();
                     m.searchtempcontactList.value=m.searchcontactList.value;
                     print(m.searchcontactList.value);
-                    return SingleList();
+                   return StatefulBuilder(builder: (context, setState) {
+                     return SingleList();
+                   },);
                   },
                   transitionDuration: Duration(seconds: 1),
                 );

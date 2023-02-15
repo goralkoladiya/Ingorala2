@@ -3,31 +3,26 @@ import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:ingorala/ObjectBox.dart';
-import 'package:ingorala/contacts.dart';
 import 'package:ingorala/src/models/conversation.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:objectbox/objectbox.dart';
 class MyProvider extends GetxController
 {
- static ObjectBox? objectbox;
-
    SharedPreferences? prefs;
-   RxList<contacts> contactList=<contacts>[].obs;
-  RxList<contacts> tempcontactList=<contacts>[].obs;
+   RxList<Contacts> contactList=<Contacts>[].obs;
+   RxList<Contacts> tempcontactList=<Contacts>[].obs;
 
-   RxList<contacts> searchcontactList=<contacts>[].obs;
-  RxList<contacts> searchtempcontactList=<contacts>[].obs;
+   RxList<Contacts> favcontactList=<Contacts>[].obs;
+   RxList<Contacts> tempfavcontactList=<Contacts>[].obs;
 
-  RxList<contacts> favcontactList=<contacts>[].obs;
-  RxList<contacts> favtempcontactList=<contacts>[].obs;
+   RxList<Contacts> searchcontactList=<Contacts>[].obs;
+   RxList<Contacts> searchtempcontactList=<Contacts>[].obs;
 
    RxInt currentTab = 3.obs;
    RxInt totalcontacts = 0.obs;
    RxInt selectedTab = 3.obs;
-   RxString currentTitle = 'Alphabet wise Contacts'.obs;
+   RxString currentTitle = 'Contacts'.obs;
    RxString id="".obs;
    RxString name="".obs;
    RxString address="".obs;
@@ -43,13 +38,16 @@ class MyProvider extends GetxController
 
      var result = await Connectivity().checkConnectivity();
      final prefs = await SharedPreferences.getInstance();
-     objectbox = await ObjectBox.create();
-     List<contacts>? tags = objectbox?.contactbox.getAll();
+
      if(result == ConnectivityResult.none)
      {
        print("No internet connection");
-       print("box==$tags");
-       contactList.value=tags!;
+       Database d=await createdatabase();
+       String q1="select * from contacts";
+       List l=await d.rawQuery(q1);
+       l.forEach((element) {
+         contactList.add(Contacts.fromJson(element));
+       });
        tempcontactList=contactList;
        return contactList.value;
      }
@@ -62,30 +60,45 @@ class MyProvider extends GetxController
          totalcontacts.value=map['total'];
          await prefs.setInt('total', totalcontacts.value);
          print("online=${totalcontacts.value}");
-         print("box==$tags");
-         if(tags!.length==0 || tags.length!=totalcontacts.value)
+         createdatabase().then((value) async {
+           String q1="select * from contacts";
+           List l=await value.rawQuery(q1);
+           int total=l.length;
+           if(total!=totalcontacts.value)
            {
-             list.forEach((element) {
-               contacts c=contacts.fromJson(element);
-               tags.forEach((element) {
-                  if(tags.length==0)
-                    {
-                      c.favourite=0;
-                    }
-                  else
-                    {
-                      c.favourite=element.favourite;
-                    }
-               });
-               objectbox?.contactbox.put(c);
+             String q2="DELETE FROM contacts";
+             await value.rawDelete(q2);
+             list.forEach((element) async {
+               String q="insert into contacts values(null,'${element['id']}','${element['name']}','${element['e_name']}','${element['address']}',"
+                   "'${element['home_address']}','${element['contact']}','${element['contact2']}',"
+                   "'${element['image']}','${element['business']}','${element['b_address']}',0)";
+               await value.rawInsert(q);
              });
            }
+         });
 
-         contactList.value=tags;
+         Database d=await createdatabase();
+         String q1="select * from contacts";
+         List l=await d.rawQuery(q1);
+         l.forEach((element) {
+           contactList.add(Contacts.fromJson(element));
+         });
+         print(contactList.value);
          tempcontactList=contactList;
-
          return contactList.value;
        }
   }
 
+ static Future<Database> createdatabase() async {
+    var databasesPath = await getDatabasesPath();
+    String path = join(databasesPath, 'demo.db');
+    Database database = await openDatabase(path, version: 1,
+        onCreate: (Database db, int version) async {
+          await db.execute(
+              'CREATE TABLE contacts (id INTEGER PRIMARY KEY,cid TEXT, name TEXT, e_name TEXT, address TEXT,'
+                  '`home_address` TEXT, `contact` TEXT, `contact2` TEXT, `image` TEXT, `business` TEXT, `b_address` TEXT,fav INTEGER default 0)');
+        });
+    return database;
+
+  }
 }

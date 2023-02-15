@@ -1,16 +1,15 @@
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ingorala/contacts.dart';
 import 'package:ingorala/src/models/conversation.dart';
 import 'package:ingorala/src/screens/account.dart';
 
 import '../../config/ui_icons.dart';
 import '../models/conversation.dart' as model;
-import '../models/user.dart';
+
 import 'package:flutter/material.dart';
 
 class MessageItemWidget extends StatefulWidget {
-  contacts message;
+  Contacts message;
   MessageItemWidget(this.message) ;
 
 
@@ -65,7 +64,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Text(
-                      this.widget.message.name!,
+                      this.widget.message.name,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -75,7 +74,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            this.widget.message.eName!,
+                            this.widget.message.e_name,
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                             style: Theme.of(context).textTheme.caption!.merge(
@@ -83,7 +82,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
                           ),
                         ),
                         Text(
-                          this.widget.message.address!,
+                          this.widget.message.address,
                           overflow: TextOverflow.fade,
                           softWrap: false,
                           style: Theme.of(context).textTheme.bodyLarge,
@@ -91,7 +90,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
                       ],
                     ),
                     Text(
-                      this.widget.message.contact!,
+                      this.widget.message.contact,
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       style: Theme.of(context).textTheme.bodyMedium,

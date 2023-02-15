@@ -1,19 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
-import 'package:ingorala/contacts.dart';
+
 import 'package:ingorala/src/models/conversation.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../config/ui_icons.dart';
 import '../MyProvider.dart';
-import '../models/user.dart';
-import '../widgets/ProfileSettingsDialog.dart';
+
 import '../widgets/SearchBarWidget.dart';
 import 'package:flutter/material.dart';
 
 class AccountWidget extends StatefulWidget {
-  contacts? message;
+  Contacts? message;
   AccountWidget({this.message});
 
   @override
@@ -49,16 +48,16 @@ class _AccountWidgetState extends State<AccountWidget> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          widget.message!.name!,
+                          widget.message!.name,
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                         Text(
-                          widget.message!.eName!,
+                          widget.message!.e_name,
                           style: Theme.of(context).textTheme.caption,
                         ),
                         Text(
-                          "${widget.message!.favourite}",
+                          "${widget.message!.fav}",
                           style: Theme.of(context).textTheme.caption,
                         )
                       ],
@@ -130,25 +129,26 @@ class _AccountWidgetState extends State<AccountWidget> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: widget.message!.favourite==0?TextButton(
+                    child: widget.message!.fav==0?TextButton(
                       // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                       onPressed: () async {
-                        widget.message!.favourite=1;
+                        widget.message!.fav=1;
                         m.currentTab.value=4;
                         m.selectedTab.value=4;
                         m.currentTitle.value = 'Favorites';
-                        Navigator.of(context).pushNamed('/Tabs', arguments: 4);
-                        // Database d=await MyProvider.createdatabase();
-                        // String q1="update contacts set fav=1 where id=${widget.message!.id}";
-                        // d.rawUpdate(q1).then((value) async {
-                        //   String q11="select * from contacts";
-                        //   List l=await d.rawQuery(q11);
-                        //   m.contactList.clear();
-                        //   l.forEach((element) {
-                        //     m.contactList.add(contacts.fromJson(element));
-                        //   });
-                        //
-                        // });
+                        Database d=await MyProvider.createdatabase();
+                        String q1="update contacts set fav=1 where id=${widget.message!.id}";
+                        d.rawUpdate(q1).then((value) async {
+                          String q11="select * from contacts";
+                          List l=await d.rawQuery(q11);
+                          m.contactList.clear();
+                          l.forEach((element) {
+                            m.contactList.add(Contacts.fromJson(element));
+                          });
+                          Navigator.of(context).pushNamed('/Tabs', arguments: 4);
+                        });
+
+
                       },
                       child: Column(
                         children: <Widget>[
@@ -162,11 +162,21 @@ class _AccountWidgetState extends State<AccountWidget> {
                     ):TextButton(
                       // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                       onPressed: () async {
-                        widget.message!.favourite=0;
-
+                        widget.message!.fav=0;
                         m.currentTab.value=4;
                         m.selectedTab.value=4;
-                        Navigator.of(context).pushNamed('/Tabs', arguments: 4);
+                        Database d=await MyProvider.createdatabase();
+                        String q1="update contacts set fav=0 where id=${widget.message!.id}";
+                        d.rawUpdate(q1).then((value) async {
+                          String q11="select * from contacts";
+                          List l=await d.rawQuery(q11);
+                          m.contactList.clear();
+                          l.forEach((element) {
+                            m.contactList.add(Contacts.fromJson(element));
+                          });
+                          Navigator.of(context).pushNamed('/Tabs', arguments: 4);
+
+                        });
 
                       },
                       child: Column(
@@ -311,7 +321,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                           style:  TextStyle(color: Theme.of(context).focusColor),
                         ),
                         Text(
-                          widget.message!.address!,
+                          widget.message!.address,
                           style: Theme.of(context).textTheme.caption,
                         )
                       ],
@@ -329,7 +339,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                           style: TextStyle(color: Theme.of(context).focusColor),
                         ),
                         Text(
-                          widget.message!.homeAddress!,
+                          widget.message!.home_address,
                           style: Theme.of(context).textTheme.caption,
                         )
                       ],
@@ -344,7 +354,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                       style: TextStyle(color: Theme.of(context).focusColor),
                     ),
                     trailing: Text(
-                      widget.message!.contact!,
+                      widget.message!.contact,
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),
@@ -356,7 +366,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                       style: TextStyle(color: Theme.of(context).focusColor),
                     ),
                     trailing: Text(
-                      widget.message!.contact2!,
+                      widget.message!.contact2,
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),
@@ -407,7 +417,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                     title: Column(
                       children: <Widget>[
                         Text(
-                          widget.message!.business!,
+                          widget.message!.business,
                           textAlign: TextAlign.left,
                           style:  TextStyle(color: Theme.of(context).focusColor),
                         ),
@@ -426,7 +436,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                           style: TextStyle(color: Theme.of(context).focusColor),
                         ),
                         Text(
-                          "${widget.message!.bAddress!}",
+                          "${widget.message!.b_address}",
                           style: Theme.of(context).textTheme.caption,
                         )
                       ],

@@ -127,8 +127,7 @@ class _otpState extends State<otp> {
                                       } on PlatformException catch (error) {
                                       }
                                     }
-
-                                    Navigator.of(context).pushNamed('/Tabs', arguments: 2);
+                                    Navigator.of(context).pushReplacementNamed('/Tabs', arguments: 2);
                                   }
                                   else
                                     {

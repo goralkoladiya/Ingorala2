@@ -726,7 +726,7 @@ packages:
     source: hosted
     version: "0.5.0"
   objectbox:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: objectbox
       sha256: c18d41f4e81e5a30fc0e2200e9e8306f5ccc8a9b61fe3746426359690c33dc7b
@@ -738,14 +738,6 @@ packages:
     description:
       name: objectbox_generator
       sha256: "728a9ccf4d6a2ac44a016f6cb9798e4a31ee92b79828526181e0de97a3506c28"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.7.2"
-  objectbox_sync_flutter_libs:
-    dependency: "direct main"
-    description:
-      name: objectbox_sync_flutter_libs
-      sha256: "879bc3eaf7761cdb3ab7337fd754d3a6b4d5cee66ffca1114694310408d6c5c0"
       url: "https://pub.dev"
     source: hosted
     version: "1.7.2"

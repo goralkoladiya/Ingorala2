@@ -100,7 +100,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                               {
                                 await FirebaseAuth.instance.verifyPhoneNumber(
                                   phoneNumber: '+91 ${mobile}',
-                                  timeout: Duration(seconds: 120),
+                                  timeout: Duration(seconds: 30),
                                   verificationCompleted: (PhoneAuthCredential credential) async {
                                     print(credential.smsCode);
                                     await auth.signInWithCredential(credential);
