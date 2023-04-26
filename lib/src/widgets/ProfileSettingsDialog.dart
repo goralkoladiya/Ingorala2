@@ -1,11 +1,15 @@
 import 'dart:convert';
 
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+  
+import 'package:firebase_database/firebase_database.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../config/ui_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:http/http.dart' as http;
+import '../../config/app_config.dart';
+import '../MyProvider.dart';
 class ProfileSettingsDialog extends StatefulWidget {
 
   @override
@@ -24,6 +28,7 @@ class _ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
   String business="";
   String b_address="";
   String image="";
+  MyProvider m1 = Get.find();
   getdata() async {
     final prefs = await SharedPreferences.getInstance();
     id=prefs.getString("id")??"";
@@ -44,7 +49,7 @@ class _ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
     // TODO: implement initState
     super.initState();
     getdata();
-
+    // print(m1.key.value);
   }
 
   @override
@@ -147,11 +152,11 @@ class _ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
                         },
                         child: Text('Cancel'),
                       ),
-                      MaterialButton(
+                      TextButton(
                         onPressed: _submit,
                         child: Text(
                           'Save',
-                          style: TextStyle(color: Theme.of(context).accentColor),
+                          style: TextStyle(color: Color(0xff2B3467)),
                         ),
                       ),
                     ],
@@ -174,40 +179,44 @@ class _ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
       hintText: hintText,
       labelText: labelText,
       hintStyle: Theme.of(context).textTheme.bodyLarge!.merge(
-        TextStyle(color: Theme.of(context).focusColor),
+        TextStyle(color: Color(0xff2B3467)),
       ),
       enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).hintColor.withOpacity(0.2))),
       focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).hintColor)),
       // hasFloatingPlaceholder: true,
       labelStyle: Theme.of(context).textTheme.bodyLarge!.merge(
-        TextStyle(color: Theme.of(context).hintColor),
+        TextStyle(color: Color(0xff2B3467)),
       ),
     );
   }
 
   Future<void> _submit() async {
 
-    print(address);
-    print(home_address);
-    print(contact2);
-    print(business);
-    print(b_address);
-
     String apiURL = "https://ingoralajagani.cdmi.in/updatedetails.php";
     var apiResult = await http.post(Uri.parse(apiURL),body: {"address":address,"home_address":home_address,
       "contact2":contact2,"business":business,"b_address":b_address,"id":id});
     Map m=jsonDecode(apiResult.body);
-    print(m);
     if(m['result']=="updated")
     {
+      DatabaseReference ref = FirebaseDatabase.instance.ref('users').child(m1.key.value);
+      await ref.update({"address":address,"home_address":home_address,
+        "contact2":contact2,"business":business,"b_address":b_address});
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('address', address);
-      await prefs.setString('home_address',home_address);
+      await prefs.setString('address',address);
+      await prefs.setString('home_address', home_address);
       await prefs.setString('contact2', contact2);
-      await prefs.setString('business',business);
+      await prefs.setString('business', business);
       await prefs.setString('b_address', b_address);
+
+      m1.address.value=prefs.getString("address")??"";
+      m1.contact2.value=prefs.getString("contact2")??"";
+      m1.home_address.value=prefs.getString("home_address")??"";
+      m1.b_address.value=prefs.getString("b_address")??"";
+      m1.business.value=prefs.getString("business")??"";
+      m1.currentTab.value = 1;
+      m1.currentTitle.value = 'Profile';
       Navigator.pop(context);
-      Navigator.of(context).pushNamed('/Profile');
+
     }
   }
 }

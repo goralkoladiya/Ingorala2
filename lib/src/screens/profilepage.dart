@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
-
+import '../whatsappicon.dart';
 // import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -13,6 +14,7 @@ import 'package:ingorala/src/models/conversation.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../config/ui_icons.dart';
 import '../../main.dart';
 
@@ -31,7 +33,6 @@ class ProfileWidget extends StatefulWidget {
 class _ProfileWidgetState extends State<ProfileWidget> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   MyProvider m = Get.find();
-
   File? imageFile;
   final imgPicker = ImagePicker();
   String uploadurl = "https://ingoralajagani.cdmi.in/uploadimage.php";
@@ -68,7 +69,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
     var imgCamera = await imgPicker.getImage(source: ImageSource.camera);
     imageFile = File(imgCamera!.path);
     await uploadImage(imageFile!);
-    await uploadImage(imageFile!);
   }
 
   void openGallery() async {
@@ -92,11 +92,18 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       );
       if(response.statusCode == 200){
         var jsondata = json.decode(response.body); //decode json data
+        print(jsondata);
         if(jsondata['msg']=="image is submited.")
         {
-          m.offimage.value = imageFile.path;
-          await prefs.setString('offimage', m.offimage.value);
-          Navigator.of(context).pop();
+          DatabaseReference ref = FirebaseDatabase.instance.ref('users').child(m.key.value);
+          await ref.update({"image":jsondata['url']});
+          await prefs.setString('image', jsondata['url']);
+          m.image.value =prefs.getString("image")??"";
+          m.currentTab.value = 1;
+          m.selectedTab.value = 1;
+          m.currentTitle.value = 'Profile';
+          Navigator.pop(context);
+          // Navigator.of(context).pushNamed('/Tabs', arguments: 1);
         }
       }else{
         print("Error during connection to server");
@@ -105,6 +112,8 @@ class _ProfileWidgetState extends State<ProfileWidget> {
       print("Error during converting to Base64");
     }
   }
+
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -136,43 +145,33 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   ),
                   Column(
                     children: [
-                      m.offimage.value!=""
-                          ? InkWell(
-                              onTap: () {
-                                showDialog(
-                                  barrierDismissible: true,
-                                  context: context,
-                                  builder: (context) {
-                                    return Container(
-                                        height: 300,
-                                        width: 300,
-                                        child: Obx(
+                      InkWell(
+                          onTap: () {
+                            showDialog(
+                              barrierDismissible: true,
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                    height: 300,
+                                    width: 300,
+                                    child: Obx(
                                           () => CircleAvatar(
-                                            backgroundImage: FileImage(
-                                                File(m.offimage.value)),
-                                          ),
-                                        ));
-                                  },
-                                );
+                                        backgroundImage: NetworkImage("https://ingoralajagani.cdmi.in/${m.image.value}"),
+                                      ),
+                                    ));
                               },
-                              child: Obx(() => SizedBox(
-                                    width: 90,
-                                    height: 90,
-                                    child: InkWell(
-                                        borderRadius:
-                                            BorderRadius.circular(300),
-                                        child: CircleAvatar(
-                                          backgroundImage:
-                                              FileImage(File(m.offimage.value)),
-                                        )),
-                                  )))
-                          : Container(
-                        width: 90,
-                        height: 90,
-                        decoration: BoxDecoration(shape: BoxShape.circle,image: DecorationImage(
-                            image: AssetImage("img/profile.png")
-                        )),
-                      ),
+                            );
+                          },
+                          child: Obx(() => SizedBox(
+                            width: 90,
+                            height: 90,
+                            child: InkWell(
+                                borderRadius:
+                                BorderRadius.circular(300),
+                                child: CircleAvatar(
+                                  backgroundImage: NetworkImage("https://ingoralajagani.cdmi.in/${m.image.value}"),
+                                )),
+                          ))),
                       SizedBox(
                         height: 10,
                       ),
@@ -203,14 +202,31 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                   Expanded(
                     child: TextButton(
                       // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                      onPressed: () {
+                      onPressed: () async {
+                        var contact = "+91${m.contact.value}";
+                        var androidUrl = "whatsapp://send?phone=$contact&text=Hi";
+                        var iosUrl = "https://wa.me/$contact?text=${Uri.parse('Hi')}";
+                        try{
+                          if(Platform.isIOS){
+                            await launchUrl(Uri.parse(iosUrl));
+                          }
+                          else{
+                            await launchUrl(Uri.parse(androidUrl));
+                          }
+                        } on Exception{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("WhatsApp is not installed on the device"),
+                            ),
+                          );
+                        }
                         // Navigator.of(context).pushNamed('/Tabs', arguments: 4);
                       },
                       child: Column(
                         children: <Widget>[
-                          Icon(UiIcons.heart),
+                          Icon(MyFlutterApp.whatsapp),
                           Text(
-                            'Wish List',
+                            'Whatsapp',
                             style: Theme.of(context).textTheme.bodyLarge,
                           )
                         ],
@@ -272,7 +288,6 @@ class _ProfileWidgetState extends State<ProfileWidget> {
                             );
                           },
                         );
-                        // UrlLauncher.launchUrl(Uri.parse('tel:+91${contact}'));
                       },
                       child: Column(
                         children: <Widget>[

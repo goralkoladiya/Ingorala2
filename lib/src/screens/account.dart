@@ -1,4 +1,9 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../whatsappicon.dart';
 import 'package:get/get.dart';
 
 import 'package:ingorala/src/models/conversation.dart';
@@ -13,7 +18,8 @@ import 'package:flutter/material.dart';
 
 class AccountWidget extends StatefulWidget {
   Contacts? message;
-  AccountWidget({this.message});
+  String id;
+  AccountWidget(this.id,{this.message});
 
   @override
   _AccountWidgetState createState() => _AccountWidgetState();
@@ -22,6 +28,8 @@ class AccountWidget extends StatefulWidget {
 class _AccountWidgetState extends State<AccountWidget> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   MyProvider m=Get.put(MyProvider());
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -48,18 +56,15 @@ class _AccountWidgetState extends State<AccountWidget> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          widget.message!.name,
+                         "${ widget.message!.name}",
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.displayMedium,
                         ),
                         Text(
-                          widget.message!.e_name,
+                          "${widget.message!.e_name}",
                           style: Theme.of(context).textTheme.caption,
                         ),
-                        Text(
-                          "${widget.message!.fav}",
-                          style: Theme.of(context).textTheme.caption,
-                        )
+
                       ],
                       crossAxisAlignment: CrossAxisAlignment.start,
                     ),
@@ -75,7 +80,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                               imageUrl: "https://ingoralajagani.cdmi.in/${this.widget.message!.image}",
                               imageBuilder: (context, imageProvider) => Container(
                                 decoration: BoxDecoration(
-                                  // shape: BoxShape.circle,
+                                  shape: BoxShape.circle,
                                   image: DecorationImage(
                                     image: imageProvider,
                                     fit: BoxFit.cover,
@@ -129,61 +134,32 @@ class _AccountWidgetState extends State<AccountWidget> {
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: widget.message!.fav==0?TextButton(
-                      // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                    child: TextButton(
                       onPressed: () async {
-                        widget.message!.fav=1;
-                        m.currentTab.value=4;
-                        m.selectedTab.value=4;
-                        m.currentTitle.value = 'Favorites';
-                        Database d=await MyProvider.createdatabase();
-                        String q1="update contacts set fav=1 where id=${widget.message!.id}";
-                        d.rawUpdate(q1).then((value) async {
-                          String q11="select * from contacts";
-                          List l=await d.rawQuery(q11);
-                          m.contactList.clear();
-                          l.forEach((element) {
-                            m.contactList.add(Contacts.fromJson(element));
-                          });
-                          Navigator.of(context).pushNamed('/Tabs', arguments: 4);
-                        });
-
-
+                        var contact = "+91${widget.message!.contact}";
+                        var androidUrl = "whatsapp://send?phone=$contact&text=Hi";
+                        var iosUrl = "https://wa.me/$contact?text=${Uri.parse('Hi')}";
+                        try{
+                          if(Platform.isIOS){
+                            await launchUrl(Uri.parse(iosUrl));
+                          }
+                          else{
+                            await launchUrl(Uri.parse(androidUrl));
+                          }
+                        } on Exception{
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("WhatsApp is not installed on the device"),
+                            ),
+                          );
+                        }
+                        // Navigator.of(context).pushNamed('/Tabs', arguments: 4);
                       },
                       child: Column(
                         children: <Widget>[
-                          Icon(UiIcons.heart),
+                          Icon(MyFlutterApp.whatsapp),
                           Text(
-                            'Wish List',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          )
-                        ],
-                      ),
-                    ):TextButton(
-                      // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                      onPressed: () async {
-                        widget.message!.fav=0;
-                        m.currentTab.value=4;
-                        m.selectedTab.value=4;
-                        Database d=await MyProvider.createdatabase();
-                        String q1="update contacts set fav=0 where id=${widget.message!.id}";
-                        d.rawUpdate(q1).then((value) async {
-                          String q11="select * from contacts";
-                          List l=await d.rawQuery(q11);
-                          m.contactList.clear();
-                          l.forEach((element) {
-                            m.contactList.add(Contacts.fromJson(element));
-                          });
-                          Navigator.of(context).pushNamed('/Tabs', arguments: 4);
-
-                        });
-
-                      },
-                      child: Column(
-                        children: <Widget>[
-                          Icon(Icons.favorite,color: Colors.amber,),
-                          Text(
-                            'Wish List',
+                            'Whatsapp',
                             style: Theme.of(context).textTheme.bodyLarge,
                           )
                         ],
@@ -243,38 +219,32 @@ class _AccountWidgetState extends State<AccountWidget> {
                   ),
                   // Expanded(
                   //   child: TextButton(
-                  //     // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                  //     onPressed: () {
+                  //     onPressed: () async {
+                  //       final prefs = await SharedPreferences.getInstance();
+                  //       DatabaseReference ref = FirebaseDatabase.instance.ref("Favourite").child('${m.key}').push();
+                  //       if(!m.favlist.contains(widget.id))
+                  //       {
+                  //         m.favlist.add(widget.id.toString());
+                  //         await prefs.setStringList('favitems', m.favlist.value);
+                  //         await ref.set(widget.message!.toJson());
+                  //       }
+                  //       m.currentTab.value = 4;
+                  //       m.selectedTab.value = 4;
+                  //       m.currentTitle.value = 'Favourite';
                   //       Navigator.of(context).pushNamed('/Tabs', arguments: 0);
                   //     },
                   //     child: Column(
                   //       children: <Widget>[
-                  //         Icon(UiIcons.favorites),
+                  //         Icon(Icons.favorite_border,),
                   //         Text(
-                  //           'Following',
+                  //           'Favourite',
                   //           style: Theme.of(context).textTheme.bodyLarge,
                   //         )
                   //       ],
                   //     ),
                   //   ),
-                  // ),
-                  // Expanded(
-                  //   child: TextButton(
-                  //     // padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                  //     onPressed: () {
-                  //       Navigator.of(context).pushNamed('/Tabs', arguments: 3);
-                  //     },
-                  //     child: Column(
-                  //       children: <Widget>[
-                  //         Icon(UiIcons.chat_1),
-                  //         Text(
-                  //           'Messages',
-                  //           style: Theme.of(context).textTheme.bodyLarge,
-                  //         )
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
+                  // )
+
                 ],
               ),
             ),
@@ -321,7 +291,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                           style:  TextStyle(color: Theme.of(context).focusColor),
                         ),
                         Text(
-                          widget.message!.address,
+                          "${widget.message!.address}",
                           style: Theme.of(context).textTheme.caption,
                         )
                       ],
@@ -339,7 +309,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                           style: TextStyle(color: Theme.of(context).focusColor),
                         ),
                         Text(
-                          widget.message!.home_address,
+                          "${widget.message!.home_address}",
                           style: Theme.of(context).textTheme.caption,
                         )
                       ],
@@ -354,7 +324,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                       style: TextStyle(color: Theme.of(context).focusColor),
                     ),
                     trailing: Text(
-                      widget.message!.contact,
+                      "${widget.message!.contact}",
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),
@@ -366,7 +336,7 @@ class _AccountWidgetState extends State<AccountWidget> {
                       style: TextStyle(color: Theme.of(context).focusColor),
                     ),
                     trailing: Text(
-                      widget.message!.contact2,
+                      "${widget.message!.contact2}",
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ),

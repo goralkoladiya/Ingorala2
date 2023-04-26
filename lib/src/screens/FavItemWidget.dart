@@ -12,7 +12,8 @@ import 'package:flutter/material.dart';
 
 class FavItemWidget extends StatefulWidget {
   Contacts message;
-  FavItemWidget(this.message) ;
+  String id;
+  FavItemWidget(this.message,this.id) ;
 
 
   @override
@@ -65,7 +66,7 @@ class _FavItemWidgetState extends State<FavItemWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Text(
-                      this.widget.message.name,
+                      "${this.widget.message.name}",
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -75,7 +76,7 @@ class _FavItemWidgetState extends State<FavItemWidget> {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            this.widget.message.e_name,
+                            "${this.widget.message.e_name}",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                             style: Theme.of(context).textTheme.caption!.merge(
@@ -83,7 +84,7 @@ class _FavItemWidgetState extends State<FavItemWidget> {
                           ),
                         ),
                         Text(
-                          this.widget.message.address,
+                          "${this.widget.message.address}",
                           overflow: TextOverflow.fade,
                           softWrap: false,
                           style: Theme.of(context).textTheme.bodyLarge,
@@ -91,7 +92,7 @@ class _FavItemWidgetState extends State<FavItemWidget> {
                       ],
                     ),
                     Text(
-                      this.widget.message.contact,
+                      "${this.widget.message.contact}",
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -104,7 +105,7 @@ class _FavItemWidgetState extends State<FavItemWidget> {
         );
       },
       openBuilder: (context, action) {
-        return AccountWidget(message: widget.message,);
+        return AccountWidget(widget.id,message: widget.message);
       },
     );
   }

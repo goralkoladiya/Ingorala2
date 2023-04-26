@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:json_store/json_store.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 import '../../config/ui_icons.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,12 +26,47 @@ class _SignInWidgetState extends State<SignInWidget> {
   MyProvider m=Get.find();
   String err="";
   FirebaseAuth auth = FirebaseAuth.instance;
-  Widget build(BuildContext context) {
+  StreamSubscription? internetconnection;
+  bool isoffline = false;
+  //set variable for Connectivity subscription listiner
 
+  @override
+  void initState() {
+    internetconnection = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      // whenevery connection status is changed.
+      if(result == ConnectivityResult.none){
+        //there is no any connection
+        setState(() {
+          isoffline = true;
+        });
+      }else if(result == ConnectivityResult.mobile){
+        //connection is mobile data network
+        setState(() {
+          isoffline = false;
+        });
+      }else if(result == ConnectivityResult.wifi){
+        //connection is from wifi
+        setState(() {
+          isoffline = false;
+        });
+      }
+    }); // using this listiner, you can get the medium of connection as well.
+
+    super.initState();
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    internetconnection!.cancel();
+    //cancel internent connection subscription after you are done
+  }
+
+  Widget build(BuildContext context) {
     final node = FocusScope.of(context);
     return Scaffold(
-      backgroundColor: Theme.of(context).hintColor.withOpacity(0.8),
-      body: SingleChildScrollView(
+      backgroundColor: Color(0xff2B3467).withOpacity(0.7),
+      body: !isoffline?SingleChildScrollView(
         child: Column(
           children: <Widget>[
             Stack(
@@ -41,10 +77,10 @@ class _SignInWidgetState extends State<SignInWidget> {
                   margin: EdgeInsets.symmetric(vertical: 65, horizontal: 20),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: Theme.of(context).primaryColor,
+                      color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                            color: Theme.of(context).hintColor.withOpacity(0.2),
+                            color: Color(0xff2B3467).withOpacity(0.2),
                             offset: Offset(0, 10),
                             blurRadius: 20)
                       ]),
@@ -60,7 +96,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                       SizedBox(height: 60),
                        TextField(
                          controller: t1,
-                         style: Theme.of(context).textTheme.bodyLarge,
+                         style: TextStyle(fontSize: 16.0, color: config.Colors().textSecondeColor(1)),
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.next,
                         onEditingComplete: () => node.nextFocus(),
@@ -95,7 +131,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                           var apiResult = await http.post(Uri.parse(apiURL),body: {"mobile":mobile});
                           if (apiResult.statusCode == 200) {
                             Map _data = await jsonDecode(apiResult.body);
-                            print(_data);
+                            // print(_data);
                             if(_data['result']=="ok")
                               {
                                 await FirebaseAuth.instance.verifyPhoneNumber(
@@ -111,7 +147,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                                     }
                                   },
                                   codeSent: (String verificationId, int? resendToken) {
-                                    Navigator.of(context).pushNamed('/otp',arguments: {'ver_id':verificationId,'mob':mobile});
+                                    Navigator.of(context).pushReplacementNamed('/otp',arguments: {'ver_id':verificationId,'mob':mobile});
                                   },
                                   codeAutoRetrievalTimeout: (String verificationId) {
 
@@ -125,7 +161,7 @@ class _SignInWidgetState extends State<SignInWidget> {
                                 });
                               }
                           } else {
-                            print(apiResult.statusCode);
+                            // print(apiResult.statusCode);
                           }
                         },
                         child: Text(
@@ -147,6 +183,8 @@ class _SignInWidgetState extends State<SignInWidget> {
             ),
           ],
         ),
+      ):Center(
+        child: Text("no Internet Connection"),
       ),
     );
   }

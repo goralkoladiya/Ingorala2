@@ -35,16 +35,16 @@ class App {
 }
 
 class Colors {
-  Color _mainColor = Color(0xFC8D5F);
-  Color _mainDarkColor = Color(0xFC8D5F);
-  Color _secondColor = Color(0xBA5A2F);//
-  Color _secondDarkColor = Color(0xBA5A2F);//
-  Color _accentColor = Color(0xFF9B70);
-  Color _accentDarkColor = Color(0xFF9B70);
+  Color _mainColor = Color(0xffFCFFE7);
+  Color _mainDarkColor = Color(0xffFCFFE7);
+  Color _secondColor = Color(0xff2B3467);//
+  Color _secondDarkColor = Color(0xffBA5A2F);//
+  Color _accentColor = Color(0xffFF9B70);
+  Color _accentDarkColor = Color(0xffFF9B70);
 
-  Color _textMainColor = Color(0X945032);
-  Color _textSecondColor = Color(0x945032);
-  Color _textAccentColor = Color(0x945032);
+  Color _textMainColor = Color(0Xff2B3467);
+  Color _textSecondColor = Color(0xff2B3467);
+  Color _textAccentColor = Color(0xffEB455F);
 
   Color mainColor(double opacity) {
     return this._mainColor.withOpacity(opacity);

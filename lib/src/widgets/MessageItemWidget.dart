@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 
 class MessageItemWidget extends StatefulWidget {
   Contacts message;
-  MessageItemWidget(this.message) ;
+  String id;
+  MessageItemWidget(this.message,this.id) ;
 
 
   @override
@@ -25,7 +26,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
       closedBuilder: (context, action) {
         return Container(
           // color: this.widget.message!.read ? Colors.transparent : Theme.of(context).focusColor.withOpacity(0.15),
-          color:  Theme.of(context).focusColor.withOpacity(0.15),
+          color:  Color(0xffFCFFE7).withOpacity(0.15),
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -64,7 +65,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Text(
-                      this.widget.message.name,
+                      "${this.widget.message.name}",
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -74,7 +75,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            this.widget.message.e_name,
+                            "${this.widget.message.e_name}",
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                             style: Theme.of(context).textTheme.caption!.merge(
@@ -82,7 +83,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
                           ),
                         ),
                         Text(
-                          this.widget.message.address,
+                          "${this.widget.message.address}",
                           overflow: TextOverflow.fade,
                           softWrap: false,
                           style: Theme.of(context).textTheme.bodyLarge,
@@ -90,7 +91,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
                       ],
                     ),
                     Text(
-                      this.widget.message.contact,
+                      "${this.widget.message.contact}",
                       overflow: TextOverflow.fade,
                       softWrap: false,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -103,7 +104,7 @@ class _MessageItemWidgetState extends State<MessageItemWidget> {
         );
       },
       openBuilder: (context, action) {
-        return AccountWidget(message: widget.message,);
+        return AccountWidget(widget.id,message: widget.message);
       },
     );
   }

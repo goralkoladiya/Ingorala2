@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'config/app_config.dart' as config;
 import 'package:flutter/material.dart';
+import 'jsondemo.dart';
 import 'route_generator.dart';
 
 Future<void> main() async {
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Business Listing,Directory Flutter UI KIT',
       initialRoute: '/',
+      // home: jsondemo(),
       onGenerateRoute: RouteGenerator.generateRoute,
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData(
@@ -49,7 +51,7 @@ class MyApp extends StatelessWidget {
           headlineSmall: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: config.Colors().secondDarkColor(1)),
           titleMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: config.Colors().mainDarkColor(1)),
           bodyLarge: TextStyle(fontSize: 12.0, color: config.Colors().secondDarkColor(1)),
-          bodyMedium:  TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: config.Colors().secondDarkColor(1)),
+          bodyMedium:  TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: config.Colors().secondDarkColor(1)),
           // caption: TextStyle(fontSize: 12.0, color: config.Colors().secondDarkColor(0.7)),
         ),
       ),
@@ -75,7 +77,7 @@ class MyApp extends StatelessWidget {
           headlineSmall: TextStyle(fontSize: 15.0, fontWeight: FontWeight.w500, color: config.Colors().textSecondeColor(1)),
           titleMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: config.Colors().textMainColor(1)),
           bodyLarge: TextStyle(fontSize: 12.0, color: config.Colors().textSecondeColor(1)),
-          bodyMedium: TextStyle(fontSize: 14.0, fontWeight: FontWeight.w600, color: config.Colors().textSecondeColor(1)),
+          bodyMedium: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600, color: config.Colors().textSecondeColor(1)),
           // caption: TextStyle(fontSize: 12.0, color: config.Colors().textAccentColor(0.6)),
         ),
       ),

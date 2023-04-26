@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:get/get.dart';
-import 'package:image_downloader/image_downloader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../../config/ui_icons.dart';
@@ -25,11 +25,13 @@ class _otpState extends State<otp> {
   TextEditingController t1=TextEditingController();
   MyProvider m=Get.find();
   FirebaseAuth auth = FirebaseAuth.instance;
-  String err="";
+  String err=""; String _verificationId = "";
+  int? _resendToken;
+  bool clear=true;
   Widget build(BuildContext context) {
 
-    print(widget.map!['mob']);
-    print(widget.map!['ver_id']);
+    // print(widget.map!['mob']);
+    // print(widget.map!['ver_id']);
 
     final node = FocusScope.of(context);
     return Scaffold(
@@ -63,6 +65,7 @@ class _otpState extends State<otp> {
                       ),
                       SizedBox(height: 60),
                       OtpTextField(
+                        clearText: clear,
                         numberOfFields: 6,
                         enabledBorderColor:Theme.of(context).focusColor.withOpacity(0.8),
                         disabledBorderColor:Theme.of(context).focusColor.withOpacity(0.8),
@@ -76,7 +79,7 @@ class _otpState extends State<otp> {
                         },
                         //runs when every textfield is filled
                         onSubmit: (String verificationCode) async {
-
+                          err="NO Error";
                           PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: widget.map!['ver_id'], smsCode: verificationCode);
                           // Sign the user in (or link) with the credential
                            auth.signInWithCredential(credential).then((value) async {
@@ -111,22 +114,20 @@ class _otpState extends State<otp> {
                                     m.home_address.value=prefs.getString("home_address")??"";
                                     m.b_address.value=prefs.getString("b_address")??"";
                                     m.business.value=prefs.getString("business")??"";
-                                    String img =prefs.getString("image")??"";
-                                    m.offimage.value =prefs.getString("offimage")??"";
-
-                                    if(m.offimage.value=="")
-                                    {
-                                      try {
-                                        var imageId = await ImageDownloader.downloadImage("https://ingoralajagani.cdmi.in/${img}");
-                                        if (imageId == null) {
-                                          return;
+                                    m.image.value =prefs.getString("image")??"";
+                                    DatabaseReference ref = FirebaseDatabase.instance.ref('users').ref;
+                                    Stream<DatabaseEvent> stream = ref.onValue;
+                                    stream.listen((DatabaseEvent event) {
+                                      Map<dynamic,dynamic> data = event.snapshot.value as Map<dynamic,dynamic>;
+                                      data.forEach((key, value) {
+                                        print(value);
+                                        Map map=value;
+                                        if(value['e_name'].toString()==m.e_name.value)
+                                        {
+                                          m.key.value=key;
                                         }
-                                        m.offimage.value = (await ImageDownloader.findPath(imageId))!;
-                                        print("path=${m.offimage.value}");
-                                        await prefs.setString('offimage', m.offimage.value);
-                                      } on PlatformException catch (error) {
-                                      }
-                                    }
+                                      });
+                                    });
                                     Navigator.of(context).pushReplacementNamed('/Tabs', arguments: 2);
                                   }
                                   else
@@ -145,61 +146,46 @@ class _otpState extends State<otp> {
                       ),
 
                       SizedBox(height: 50),
-                      // OutlinedButton(
-                      //   style: ButtonStyle(
-                      //     padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12, horizontal: 70)),
-                      //     backgroundColor: MaterialStateProperty.all( Theme.of(context).focusColor.withOpacity(0.8)),
-                      //     foregroundColor: MaterialStateProperty.all( Colors.white),
-                      //   ),
-                      //   // padding:
-                      //   //     EdgeInsets.symmetric(vertical: 12, horizontal: 70),
-                      //   onPressed: () async {
-                      //     String mobile=t1.text;
-                      //     String apiURL = "https://ingoralajagani.cdmi.in/checkmobile.php";
-                      //     var apiResult = await http.post(Uri.parse(apiURL),body: {"mobile":mobile});
-                      //     if (apiResult.statusCode == 200) {
-                      //       Map _data = await jsonDecode(apiResult.body);
-                      //       if(_data['result']=="ok")
-                      //       {
-                      //         Map map=_data['data'];
-                      //         final prefs = await SharedPreferences.getInstance();
-                      //         await prefs.setString('id', map['id']);
-                      //         await prefs.setString('name', map['name']);
-                      //         await prefs.setString('address', map['address']);
-                      //         await prefs.setString('e_name', map['e_name']);
-                      //         await prefs.setString('home_address', map['home_address']);
-                      //         await prefs.setString('contact', map['contact']);
-                      //         await prefs.setString('contact2', map['contact2']);
-                      //         await prefs.setString('image', map['image']);
-                      //         await prefs.setString('business', map['business']);
-                      //         await prefs.setString('b_address', map['b_address']);
-                      //
-                      //
-                      //         // Navigator.of(context).pushNamed('/Tabs', arguments: 2);
-                      //       }
-                      //       else
-                      //       {
-                      //         err="For login Contact to 8989898989 This Number";
-                      //         setState(() {
-                      //
-                      //         });
-                      //       }
-                      //     } else {
-                      //       print(apiResult.statusCode);
-                      //     }
-                      //   },
-                      //   child: Text(
-                      //       'Login',
-                      //       style: TextStyle(fontWeight: FontWeight.w300 )
-                      //   ),
-                      //   // color: Colors.blue,
-                      //   // shape: StadiumBorder(),
-                      // ),
-                      Text('$err',
+                      err=="NO Error"?CircularProgressIndicator(color: Theme.of(context).focusColor):Container(),
+                      OutlinedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 12, horizontal: 70)),
+                          backgroundColor: MaterialStateProperty.all( Theme.of(context).focusColor.withOpacity(0.8)),
+                          foregroundColor: MaterialStateProperty.all( Colors.white),
+                        ),
+                        onPressed: () async {
+                          setState(() {
+                            clear=true;
+                            err="NO Error";
+                          });
+                          await FirebaseAuth.instance.verifyPhoneNumber(
+                            phoneNumber: '+91${widget.map!['mob']}',
+                            verificationCompleted: (PhoneAuthCredential credential) {},
+                            verificationFailed: (FirebaseAuthException e) {},
+                            codeSent: (String verificationId, int? resendToken) async {
+                              _verificationId = verificationId;
+                              _resendToken = resendToken;
+                            },
+                            timeout: const Duration(seconds: 60),
+                            forceResendingToken: _resendToken,
+                            codeAutoRetrievalTimeout: (String verificationId) {
+                              verificationId = _verificationId;
+                            },
+                          );
+                          debugPrint("_verificationId: $_verificationId");
+                        },
+                        child: Text(
+                            'Resend OTP',
+                            style: TextStyle(fontWeight: FontWeight.w300 )
+                        ),
+                        // color: Colors.blue,
+                        // shape: StadiumBorder(),
+                      ),
+                      err!="NO Error"?Text('$err',
                           style: Theme.of(context).textTheme.bodyMedium!.merge(
                             TextStyle(fontWeight: FontWeight.w600,color: Theme.of(context).focusColor,
                               fontSize: 15,),)
-                      ),
+                      ):Container(),
                     ],
                   ),
                 ),

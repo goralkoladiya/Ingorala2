@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ingorala/src/MyProvider.dart';
@@ -14,10 +17,51 @@ import 'package:flutter/material.dart';
 
 import 'alphabet.dart';
 
-class TabsWidget extends StatelessWidget {
+class TabsWidget extends StatefulWidget {
 
+  @override
+  State<TabsWidget> createState() => _TabsWidgetState();
+}
+
+class _TabsWidgetState extends State<TabsWidget> {
   MyProvider m=Get.find();
-  List<Widget> currentPage=[NotificationsWidget(),ProfileWidget(),alphabet(),MessagesWidget(),FavoritesWidget()];
+
+  StreamSubscription? internetconnection;
+
+  bool isoffline = false;
+
+  //set variable for Connectivity subscription listiner
+  @override
+  void initState() {
+    internetconnection = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      // whenevery connection status is changed.
+      if(result == ConnectivityResult.none){
+        //there is no any connection
+        setState(() {
+          isoffline = true;
+        });
+      }else if(result == ConnectivityResult.mobile){
+        //connection is mobile data network
+        setState(() {
+          isoffline = false;
+        });
+      }else if(result == ConnectivityResult.wifi){
+        //connection is from wifi
+        setState(() {
+          isoffline = false;
+        });
+      }
+    }); // using this listiner, you can get the medium of connection as well.
+
+    super.initState();
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    internetconnection!.cancel();
+    //cancel internent connection subscription after you are done
+  }
 
   void _selectTab(int tabItem) {
 
@@ -45,9 +89,9 @@ class TabsWidget extends StatelessWidget {
       }
 
   }
+
   @override
   Widget build(BuildContext context) {
-
 
     final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
     return Scaffold(
@@ -68,84 +112,55 @@ class TabsWidget extends StatelessWidget {
           m.currentTitle.value,
           style: Theme.of(context).textTheme.displayLarge,
         )),
-        actions: <Widget>[
-          // Container(
-          //     width: 30,
-          //     height: 30,
-          //     margin: EdgeInsets.only(top: 12.5, bottom: 12.5, right: 20),
-          //     child: InkWell(
-          //       borderRadius: BorderRadius.circular(300),
-          //       onTap: () {
-          //         Navigator.of(context).pushNamed('/Tabs', arguments: 1);
-          //       },
-          //       child: CircleAvatar(
-          //         backgroundImage: AssetImage('img/user2.jpg'),
-          //       ),
-          //     )),
-        ],
+
       ),
-      body: Obx(() => currentPage[m.currentTab.value]),
-      // bottomNavigationBar: Obx(() => BottomNavigationBar(
-      //   type: BottomNavigationBarType.fixed,
-      //   selectedItemColor: Theme.of(context).accentColor,
-      //   selectedFontSize: 0,
-      //   unselectedFontSize: 0,
-      //   iconSize: 22,
-      //   elevation: 0,
-      //   backgroundColor: Colors.transparent,
-      //   selectedIconTheme: IconThemeData(size: 25),
-      //   unselectedItemColor: Theme.of(context).hintColor.withOpacity(1),
-      //   currentIndex: m.selectedTab.value,
-      //   onTap: (int i) {
-      //     _selectTab(i);
-      //   },
-      //   // this will be set when a new tab is tapped
-      //   items: [
-      //     BottomNavigationBarItem(
-      //         icon: Icon(UiIcons.bell),
-      //         label: "one"
-      //       // title: new Container(height: 0.0),
-      //     ),
-      //     BottomNavigationBarItem(
-      //         icon: Icon(UiIcons.user_1),
-      //         label: "one"
-      //       // title: new Container(height: 0.0),
-      //     ),
-      //     BottomNavigationBarItem(
-      //         label: "one",
-      //         // title: new Container(height: 5.0),
-      //         icon: Container(
-      //           width: 45,
-      //           height: 45,
-      //           decoration: BoxDecoration(
-      //             color: Theme.of(context).accentColor.withOpacity(0.8),
-      //             borderRadius: BorderRadius.all(
-      //               Radius.circular(50),
-      //             ),
-      //             boxShadow: [
-      //               BoxShadow(
-      //                   color: Theme.of(context).accentColor.withOpacity(0.4), blurRadius: 40, offset: Offset(0, 15)),
-      //               BoxShadow(
-      //                   color: Theme.of(context).accentColor.withOpacity(0.4), blurRadius: 13, offset: Offset(0, 3))
-      //             ],
-      //           ),
-      //           child: new Icon(UiIcons.home, color: Theme.of(context).primaryColor),
-      //         )),
-      //     BottomNavigationBarItem(
-      //       label: "one",
-      //       icon: new Icon(UiIcons.chat),
-      //       // title: new Container(height: 0.0),
-      //     ),
-      //     BottomNavigationBarItem(
-      //       label: "one",
-      //       icon: new Icon(UiIcons.heart),
-      //       // title: new Container(height: 0.0),
-      //     ),
-      //   ],
-      // )),
+      body: !isoffline?Obx(() => m.currentPage[m.currentTab.value]):Center(child: Text("No Internet Connection")),
+      bottomNavigationBar: Obx(() => BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Color(0xff2B3467),
+        selectedFontSize: 0,
+        unselectedFontSize: 0,
+        iconSize: 22,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        selectedIconTheme: IconThemeData(size: 25),
+        unselectedItemColor: Theme.of(context).hintColor.withOpacity(1),
+        currentIndex: m.selectedTab.value,
+        onTap: (int i) {
+          _selectTab(i);
+        },
+        // this will be set when a new tab is tapped
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(UiIcons.bell),
+              label: "one"
+            // title: new Container(height: 0.0),
+          ),
+          BottomNavigationBarItem(
+              icon: Icon(UiIcons.user_1),
+              label: "one"
+            // title: new Container(height: 0.0),
+          ),
+          BottomNavigationBarItem(
+              label: "one",
+              // title: new Container(height: 5.0),
+              icon: Icon(Icons.sort_by_alpha)),
+          BottomNavigationBarItem(
+            label: "one",
+            icon: new Icon(UiIcons.chat),
+            // title: new Container(height: 0.0),
+          ),
+          // BottomNavigationBarItem(
+          //   label: "one",
+          //   icon: new Icon(UiIcons.heart),
+          //   // title: new Container(height: 0.0),
+          // ),
+        ],
+      )),
+
     );
   }
-  }
+}
 
 
 //

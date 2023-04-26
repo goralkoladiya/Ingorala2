@@ -1,3 +1,5 @@
+import 'dart:collection';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
@@ -7,9 +9,9 @@ import '../MyProvider.dart';
 import '../models/conversation.dart';
 import '../widgets/EmptyFavoritesWidget.dart';
 import '../widgets/EmptyMessagesWidget.dart';
+import '../widgets/MessageItemWidget.dart';
 import '../widgets/SearchBarWidget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'FavItemWidget.dart';
 
@@ -21,26 +23,14 @@ class FavoritesWidget extends StatefulWidget {
 class _FavoritesWidgetState extends State<FavoritesWidget> {
   MyProvider m=Get.put(MyProvider());
   TextEditingController t1=TextEditingController();
-
-  getcontacts() async {
-
-    Database d=await MyProvider.createdatabase();
-    String q1="select * from contacts where fav=1";
-    List l=await d.rawQuery(q1);
-    m.favcontactList.clear();
-    l.forEach((element) {
-      m.favcontactList.value.add(Contacts.fromJson(element));
-    });
-    m.tempfavcontactList=m.favcontactList;
-
-  }
+  DatabaseReference? starCountRef;
+  String searchtxt="";
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getcontacts();
+    starCountRef = FirebaseDatabase.instance.ref('Favourite').child('${m.key.value}').ref;
   }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -67,17 +57,7 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
                     hintText: 'Search',
                     hintStyle: TextStyle(color: Theme.of(context).focusColor.withOpacity(0.8)),
                     suffixIcon: IconButton(onPressed: () {
-
-                      if(t1.text!=0)
-                        {
-                          m.favcontactList.value=m.tempfavcontactList.value.where((element) =>
-                              element.e_name.toString().toLowerCase().contains(t1.text.toLowerCase())).toList();
-
-                        }
-                      else{
-                        m.favcontactList.value=m.tempfavcontactList.value;
-                      }
-
+                      
                     },icon: Icon(UiIcons.loupe, size: 20), color: Theme.of(context).hintColor),
                     border: UnderlineInputBorder(borderSide: BorderSide.none),
                     enabledBorder: UnderlineInputBorder(borderSide: BorderSide.none),
@@ -90,31 +70,75 @@ class _FavoritesWidgetState extends State<FavoritesWidget> {
           ),
         ),
         Expanded(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(vertical: 7),
-            child: Column(
-              children: <Widget>[
-               Obx(() =>  ListView.separated(
-                 padding: EdgeInsets.symmetric(vertical: 15),
-                 shrinkWrap: true,
-                 primary: false,
-                 itemCount:m.favcontactList.length,
-                 separatorBuilder: (context, index) {
-                   return SizedBox(height: 7);
-                 },
-                 itemBuilder: (context, index) {
-                   return FavItemWidget(m.favcontactList[index],);
-                 },
-               )),
-                Offstage(
-                  offstage:m.favcontactList.isNotEmpty,
-                  child: EmptyMessagesWidget(),
-                )
-
-              ],
-            ),
-          ),
+            child: StreamBuilder<DatabaseEvent>(
+              stream: starCountRef!.onValue,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Text("Loading");
+                }
+                if(snapshot.hasData)
+                {
+                  Map<dynamic,dynamic> data = snapshot.data!.snapshot.value as Map<dynamic,dynamic>;
+                  print(data);
+                  // data = SplayTreeMap.from(
+                  //     data, (key1, key2) => data[key1]!['e_name'].compareTo(data[key2]!['e_name']));
+                  return ListView(
+                      shrinkWrap: true,
+                      children: data.entries.map((e) {
+                        print(e.value);
+                        Contacts c=Contacts.fromJson(e.value);
+                        if(searchtxt!="")
+                        {
+                          if(c.e_name.toUpperCase().contains(searchtxt.toUpperCase()))
+                          {
+                            return FavItemWidget(c,e.key);
+                          }
+                          else
+                          {
+                            return Container();
+                          }
+                        }
+                        else{
+                          return FavItemWidget(c,e.key);
+                        }
+                        // Contacts c=Contacts.fromJson(e.value);
+                        // return   MessageItemWidget(c,e.key);
+                      }).toList() as List<Widget>
+                  );
+                }
+                else
+                {
+                  return EmptyMessagesWidget();
+                }
+              },
+            )
         ),
+        // Expanded(
+        //     child: StreamBuilder<QuerySnapshot>(
+        //       stream: _usersStream,
+        //       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        //         if (snapshot.hasError) {
+        //           return Text('Something went wrong');
+        //         }
+        //
+        //         if (snapshot.connectionState == ConnectionState.waiting) {
+        //           return Text("Loading");
+        //         }
+        //
+        //         return ListView(
+        //           shrinkWrap: true,
+        //           children: snapshot.data!.docs.map((DocumentSnapshot document) {
+        //             Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
+        //             Contacts c=Contacts.fromJson(data);
+        //             return FavItemWidget(c,document.id);
+        //           }).toList(),
+        //         );
+        //       },
+        //     )
+        // ),
       ],
     );
   }

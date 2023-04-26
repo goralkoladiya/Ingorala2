@@ -68,13 +68,13 @@ class _alphabetState extends State<alphabet> {
                     );
                   },
                   openBuilder: (context, action) {
-                    print(alpha[index]);
-                    m.searchcontactList.value=m.tempcontactList.where((element) =>
-                        element.e_name.toString().toLowerCase().startsWith(alpha[index].toLowerCase())).toList();
-                    m.searchtempcontactList.value=m.searchcontactList.value;
-                    print(m.searchcontactList.value);
+                    // print(alpha[index]);
+                    // m.searchcontactList.value=m.tempcontactList.where((element) =>
+                    //     element.e_name.toString().toLowerCase().startsWith(alpha[index].toLowerCase())).toList();
+                    // m.searchtempcontactList.value=m.searchcontactList.value;
+                    // print(m.searchcontactList.value);
                    return StatefulBuilder(builder: (context, setState) {
-                     return SingleList();
+                     return SingleList(alpha[index]);
                    },);
                   },
                   transitionDuration: Duration(seconds: 1),
