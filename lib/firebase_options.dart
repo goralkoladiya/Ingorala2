@@ -72,7 +72,7 @@ class DefaultFirebaseOptions {
     storageBucket: 'ingoralajagani-70f57.appspot.com',
     androidClientId: '1096698039231-16h806o8cgmtn6e2msple75k1di04aos.apps.googleusercontent.com',
     iosClientId: '1096698039231-f5va3r50l548fp9ofe7tg1lgsmdhl3h7.apps.googleusercontent.com',
-    iosBundleId: 'com.example.ingorala',
+    iosBundleId: 'com.ingorala.jagani',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -84,6 +84,6 @@ class DefaultFirebaseOptions {
     storageBucket: 'ingoralajagani-70f57.appspot.com',
     androidClientId: '1096698039231-16h806o8cgmtn6e2msple75k1di04aos.apps.googleusercontent.com',
     iosClientId: '1096698039231-f5va3r50l548fp9ofe7tg1lgsmdhl3h7.apps.googleusercontent.com',
-    iosBundleId: 'com.example.ingorala',
+    iosBundleId: 'com.ingorala.jagani',
   );
 }

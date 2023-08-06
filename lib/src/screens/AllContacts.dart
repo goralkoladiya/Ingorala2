@@ -120,7 +120,7 @@ class _MessagesWidgetState extends State<MessagesWidget> {
                                     }).toList(),
                                     // isAlphabetsFiltered: false,
                                     alignment: LetterAlignment.right,
-                                    itemExtent: 100,
+                                    itemExtent: 120,
                                     unselectedTextStyle: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.normal,

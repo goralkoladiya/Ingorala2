@@ -1,4 +1,4 @@
-package com.example.ingorala
+package com.ingorala.jagani
 
 import io.flutter.embedding.android.FlutterActivity
 
