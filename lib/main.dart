@@ -7,6 +7,7 @@ import 'config/app_config.dart' as config;
 import 'package:flutter/material.dart';
 import 'route_generator.dart';
 import 'firebase_options.dart';
+//https://we.tl/t-sS6JovJeqT
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.black));
