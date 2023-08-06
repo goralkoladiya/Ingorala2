@@ -6,12 +6,15 @@ import 'package:flutter/services.dart';
 import 'config/app_config.dart' as config;
 import 'package:flutter/material.dart';
 import 'route_generator.dart';
-
+import 'firebase_options.dart';
 Future<void> main() async {
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.black));
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   //9979267536
 
   runApp(MyApp());

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1096698039231-f5va3r50l548fp9ofe7tg1lgsmdhl3h7.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1096698039231-f5va3r50l548fp9ofe7tg1lgsmdhl3h7</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1096698039231-16h806o8cgmtn6e2msple75k1di04aos.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyARRRwSqpXy_xdHQ028HVrs5JYIgDqJL3I</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1096698039231</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.ingorala</string>
+	<key>PROJECT_ID</key>
+	<string>ingoralajagani-70f57</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ingoralajagani-70f57.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1096698039231:ios:5ba8386b8abac663f62f0a</string>
+	<key>DATABASE_URL</key>
+	<string>https://ingoralajagani-70f57-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>

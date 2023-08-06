@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1096698039231",
+    "firebase_url": "https://ingoralajagani-70f57-default-rtdb.firebaseio.com",
     "project_id": "ingoralajagani-70f57",
     "storage_bucket": "ingoralajagani-70f57.appspot.com"
   },
@@ -22,6 +23,14 @@
           }
         },
         {
+          "client_id": "1096698039231-vpf5lta4c17kmfi8cdsvb4u77180fn87.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ingorala.jagani",
+            "certificate_hash": "fc9d8fdf85f810ebc9bb6b8b346bcf63dce4e028"
+          }
+        },
+        {
           "client_id": "1096698039231-rf6qehc09figrejaaqrtgcc9i7jfgolt.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -37,6 +46,65 @@
             {
               "client_id": "1096698039231-rf6qehc09figrejaaqrtgcc9i7jfgolt.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1096698039231-vdgbp0iqrvp80rbojtar16ovu1ca9ajs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ingorala.jagani"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096698039231:android:fe0704f6fee61bebf62f0a",
+        "android_client_info": {
+          "package_name": "com.ingorala.jagani.server"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096698039231-16h806o8cgmtn6e2msple75k1di04aos.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ingorala.jagani.server",
+            "certificate_hash": "27f373101c95e8e99eef7a88faeb830db629465d"
+          }
+        },
+        {
+          "client_id": "1096698039231-6fk2aqftg6s0e7cr0krdnmgt2ineriid.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ingorala.jagani.server",
+            "certificate_hash": "fc9d8fdf85f810ebc9bb6b8b346bcf63dce4e028"
+          }
+        },
+        {
+          "client_id": "1096698039231-rf6qehc09figrejaaqrtgcc9i7jfgolt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbGLepbXQZd-IuPzoxqYlMkbbfguKNzRw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096698039231-rf6qehc09figrejaaqrtgcc9i7jfgolt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1096698039231-vdgbp0iqrvp80rbojtar16ovu1ca9ajs.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ingorala.jagani"
+              }
             }
           ]
         }
