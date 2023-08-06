@@ -23,6 +23,12 @@ class MessageItemWidget extends StatefulWidget {
 class _MessageItemWidgetState extends State<MessageItemWidget> {
   MyProvider m=MyProvider();
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    m.getprofileurl();
+  }
+  @override
   Widget build(BuildContext context) {
     return OpenContainer(
       transitionDuration: Duration(seconds: 1),

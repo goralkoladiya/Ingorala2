@@ -124,7 +124,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               m.currentTab.value = 8;
               m.selectedTab.value = 0;
               // m.currentTitle.value = 'કોન્ટેક્ટ';
-              m.currentTitle.value = 'Advertisements';
+              m.currentTitle.value = 'જાહેરાત';
               Navigator.pop(context);
               // Navigator.of(context).pushNamed('/Tabs', arguments: 1);
             },
@@ -209,7 +209,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             onTap: () {
               m.currentTab.value = 6;
               // m.selectedTab.value = 0;
-              m.currentTitle.value = 'Gallery';
+              m.currentTitle.value = 'ગેલેરી';
               Navigator.pop(context);
             },
             leading: Icon(
@@ -268,10 +268,19 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ListTile(
             onTap: () async {
                InAppReview inAppReview = InAppReview.instance;
-              if (await inAppReview.isAvailable()) {
-
-              inAppReview.requestReview();
-              }
+              // if (await inAppReview.isAvailable()) {
+              //   print("review");
+              //
+              // }
+              if(Theme.of(context).platform==TargetPlatform.iOS)
+                {
+                  await inAppReview.openStoreListing(appStoreId:'com.ingorala.jagani');
+                }
+              else
+                {
+                  await inAppReview.requestReview();
+                }
+              //
             },
             leading: Icon(
               Icons.rate_review_outlined,

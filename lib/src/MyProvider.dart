@@ -43,7 +43,7 @@ class MyProvider extends GetxController {
     AdvBannerScreen(), //8
     developerDetails(), //9
   ];
-  RxString serverUrl="".obs;
+  RxString serverUrl="https://ingoralajagani.cdmi.in".obs;
   int _searchIndex = 0;
   Members? memberModal;
   SurnameList? surnameList;
@@ -64,6 +64,17 @@ class MyProvider extends GetxController {
     "B 201-203, 2nd Floor, Aditya Complex, VIP Circle, Utran, Mota Varachha, Surat-395006",
     "UG-1/2, 1st Floor, V3 Corner, Honey Park Rd, Opp. 9 Square, L.P. Savani Road, Adajan, Surat-395009"
   ];
+  getprofileurl()
+  {
+    DatabaseReference ref = FirebaseDatabase.instance.ref('ServerUrl').ref;
+    Stream<DatabaseEvent> stream = ref.onValue;
+    stream.listen((DatabaseEvent event) {
+      Map<dynamic,dynamic> data = event.snapshot.value as Map<dynamic,dynamic>;
+      serverUrl.value=data['url'];
+      print("serverUrl=$serverUrl");
+    });
+
+  }
 
   getUrl()
   {

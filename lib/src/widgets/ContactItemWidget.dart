@@ -26,13 +26,7 @@ class _ContactItemWidgetState extends State<ContactItemWidget> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    DatabaseReference ref = FirebaseDatabase.instance.ref('ServerUrl').ref;
-    Stream<DatabaseEvent> stream = ref.onValue;
-    stream.listen((DatabaseEvent event) {
-      Map<dynamic,dynamic> data = event.snapshot.value as Map<dynamic,dynamic>;
-      m.serverUrl.value=data['url'];
-
-    });
+    m.getprofileurl();
   }
   // print("${m.serverUrl}");
   @override

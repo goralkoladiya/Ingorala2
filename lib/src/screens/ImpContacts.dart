@@ -370,7 +370,7 @@ class _ImpContactScreenState extends State<ImpContactScreen> {
                                                                   return SimpleDialog(
                                                                     children: [
                                                                       SimpleDialogOption(
-                                                                        child: Text(" Whatsapp",
+                                                                        child: Text("Whatsapp",
                                                                             style: Theme.of(context)
                                                                                 .textTheme
                                                                                 .displayMedium),
@@ -401,7 +401,7 @@ class _ImpContactScreenState extends State<ImpContactScreen> {
                                                                             color: Color(0xffFC8D5F),
                                                                             size: 10,
                                                                           ),
-                                                                          Text("${allmembers[p1].number}",
+                                                                          Text("  ${allmembers[p1].number}",
                                                                               style: Theme.of(context)
                                                                                   .textTheme
                                                                                   .bodyLarge)

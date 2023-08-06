@@ -18,6 +18,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
   List<dynamic> _notificationList=[];
   MyProvider m=MyProvider();
   getNotification() async {
+    m.getprofileurl();
     String apiURL = "${m.serverUrl.value}/getnotes.php";
     var apiResult = await http.get(Uri.parse(apiURL));
     var jsonObject = json.decode(apiResult.body);

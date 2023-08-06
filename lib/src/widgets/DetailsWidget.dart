@@ -165,7 +165,7 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                                       );
                                     }
                                   },
-                                  child: Obx(() => Row(children: [
+                                  child: Row(children: [
                                     Icon(
                                       UiIcons.phone_call,
                                       color: Color(0xffFC8D5F),
@@ -175,7 +175,7 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge)
-                                  ])),
+                                  ]),
                                 ),
                                 (widget.message!.contact2.toString().trim().length!=0)
                                     ? SimpleDialogOption(
@@ -198,7 +198,7 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                                       );
                                     }
                                   },
-                                  child: Obx(() => Row(children: [
+                                  child: Row(children: [
                                     Icon(UiIcons.phone_call,
                                         color: Color(0xffFC8D5F),
                                         size: 20),
@@ -206,7 +206,7 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge)
-                                  ])),
+                                  ]),
                                 )
                                     : Container()
                               ],

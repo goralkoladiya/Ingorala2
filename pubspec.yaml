@@ -52,7 +52,6 @@ dependencies:
   connectivity_plus:
   firebase_core:
   firebase_auth:
-  flutter_otp_text_field:
   firebase_database:
   scrollable_positioned_list:
   alphabet_scroll_view:

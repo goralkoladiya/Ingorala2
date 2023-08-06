@@ -34,7 +34,7 @@ class _AdvBannerScreenState extends State<AdvBannerScreen> {
                     fit: BoxFit.cover,
                   ),
                   ListTile(
-                    contentPadding: EdgeInsets.all(0),
+                    contentPadding: EdgeInsets.all(10),
                     title: ReadMoreText(
                       m.advBannerListResult!.result![index].note!,
                       trimLines: 2,

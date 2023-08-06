@@ -73,6 +73,7 @@ class _SplashState extends State<Splash> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    m.getprofileurl();
     get();
     // m.getAllContacts();
     internetconnection = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
